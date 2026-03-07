@@ -3,118 +3,32 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KPOP追星体质测试</title>
+<title>KPOP偶像命理匹配测试 · Ultimate</title>
 
 <style>
 *{box-sizing:border-box}
-body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
-background:linear-gradient(135deg,#ff9a9e,#fad0c4);
-min-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:20px;
-}
-
-.app{
-width:100%;
-max-width:720px;
-background:white;
-border-radius:20px;
-padding:40px 30px;
-box-shadow:0 20px 60px rgba(0,0,0,0.15);
-text-align:center;
-}
-
-h1{margin-top:0;font-size:32px}
-
-.subtitle{
-color:#666;
-margin-bottom:30px;
-}
-
-button{
-border:none;
-border-radius:12px;
-padding:14px 18px;
-font-size:16px;
-cursor:pointer;
-}
-
-.start-btn{
-background:black;
-color:white;
-font-size:18px;
-padding:16px 26px;
-}
-
-.option{
-width:100%;
-margin:10px 0;
-background:#f3f3f3;
-text-align:left;
-font-size:16px;
-}
-
-.option:hover{
-background:#e8e8e8;
-}
-
-.progress{
-height:8px;
-background:#eee;
-border-radius:20px;
-margin-bottom:25px;
-overflow:hidden;
-}
-
-.progress-bar{
-height:100%;
-background:black;
-width:0%;
-transition:0.3s;
-}
-
-.question{
-font-size:22px;
-margin-bottom:20px;
-}
-
-.result img{
-width:200px;
-border-radius:16px;
-margin-top:15px;
-}
-
-.result-name{
-font-size:34px;
-margin:10px 0;
-}
-
-.result-desc{
-color:#555;
-line-height:1.6;
-}
-
-.actions{
-margin-top:25px;
-}
-
-.secondary{
-background:#eee;
-margin-left:10px;
-}
-
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#1f1c2c,#928dab);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:#222}
+.app{width:100%;max-width:900px;background:white;border-radius:20px;padding:36px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+h1{text-align:center;margin-top:0}
+.subtitle{text-align:center;color:#666;margin-bottom:25px}
+.section{margin-bottom:22px}
+label{display:block;font-weight:bold;margin-bottom:6px}
+input,select{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc}
+button{border:none;border-radius:10px;padding:14px 18px;font-size:16px;cursor:pointer;background:black;color:white}
+.option{width:100%;margin:8px 0;background:#f3f3f3;color:black;text-align:left}
+.option:hover{background:#e8e8e8}
+.progress{height:8px;background:#eee;border-radius:20px;margin-bottom:20px;overflow:hidden}
+.progress-bar{height:100%;background:black;width:0%}
+.question{font-size:20px;margin-bottom:10px}
 .hidden{display:none}
-
-.footer{
-margin-top:25px;
-font-size:12px;
-color:#888
-}
-
+.result{text-align:center}
+.result img{width:200px;border-radius:14px;margin-top:10px}
+.rank{margin-top:20px;text-align:left}
+.rank-item{padding:8px 0;border-bottom:1px solid #eee}
+.percent{float:right;color:#666}
+.actions{margin-top:22px}
+.secondary{background:#eee;color:black;margin-left:10px}
+.badge{display:inline-block;background:#eee;padding:4px 10px;border-radius:20px;margin:3px;font-size:12px}
 </style>
 </head>
 
@@ -122,12 +36,71 @@ color:#888
 
 <div class="app">
 
-<div id="startScreen">
-<h1>🔮 KPOP追星体质测试</h1>
-<p class="subtitle">测测你追哪个KPOP明星最旺你</p>
-<button class="start-btn" onclick="startQuiz()">开始测试</button>
-<div class="footer">仅供娱乐 · 可以自定义题库</div>
+<h1>🔮 KPOP偶像命理匹配</h1>
+<p class="subtitle">星座 · MBTI · 血型 · 八字五行 · 性格能量 综合算法</p>
+
+
+<!-- 用户信息 -->
+
+<div id="profileScreen">
+
+<div class="section">
+<label>你的星座</label>
+<select id="zodiac">
+<option>aries</option>
+<option>taurus</option>
+<option>gemini</option>
+<option>cancer</option>
+<option>leo</option>
+<option>virgo</option>
+<option>libra</option>
+<option>scorpio</option>
+<option>sagittarius</option>
+<option>capricorn</option>
+<option>aquarius</option>
+<option>pisces</option>
+</select>
 </div>
+
+<div class="section">
+<label>你的MBTI</label>
+<input id="mbti" placeholder="例如 INFP" />
+</div>
+
+<div class="section">
+<label>你的血型</label>
+<select id="blood">
+<option>A</option>
+<option>B</option>
+<option>O</option>
+<option>AB</option>
+</select>
+</div>
+
+<div class="section">
+<label>你的八字日主</label>
+<select id="bazi">
+<option>甲木</option>
+<option>乙木</option>
+<option>丙火</option>
+<option>丁火</option>
+<option>戊土</option>
+<option>己土</option>
+<option>庚金</option>
+<option>辛金</option>
+<option>壬水</option>
+<option>癸水</option>
+</select>
+</div>
+
+<div style="text-align:center">
+<button onclick="startQuiz()">开始匹配</button>
+</div>
+
+</div>
+
+
+<!-- 问答 -->
 
 <div id="quizScreen" class="hidden">
 <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
@@ -135,151 +108,192 @@ color:#888
 <div id="optionsBox"></div>
 </div>
 
+
+<!-- 结果 -->
+
 <div id="resultScreen" class="hidden result"></div>
 
 </div>
 
 <script>
 
-/* =========================
-   1. 结果配置（添加明星）
-========================= */
+/* ============================
+IDOL 数据
+============================ */
 
-const RESULTS = {
+const IDOLS={
 
 "Jennie":{
-name:"Jennie",
 img:"images/jennie.jpg",
-desc:"你属于气场型追星体质。追Jennie的人往往自带事业运和高级感。"
+traits:{zodiac:"capricorn",mbti:"INTJ",blood:"A",element:"fire",energy:"cool"}
 },
 
 "Lisa":{
-name:"Lisa",
 img:"images/lisa.jpg",
-desc:"你是快乐型追星体质。追Lisa的人往往生活充满活力和好运。"
+traits:{zodiac:"aries",mbti:"ESFP",blood:"O",element:"fire",energy:"fun"}
 },
 
 "Jisoo":{
-name:"Jisoo",
 img:"images/jisoo.jpg",
-desc:"你属于稳定型追星体质。追Jisoo的人通常生活顺利、人缘很好。"
+traits:{zodiac:"capricorn",mbti:"INFJ",blood:"A",element:"earth",energy:"calm"}
 },
 
 "Rose":{
-name:"Rose",
 img:"images/rose.jpg",
-desc:"你是浪漫型追星体质。追Rosé的人容易拥有灵感和爱情运。"
+traits:{zodiac:"aquarius",mbti:"INFP",blood:"B",element:"air",energy:"soft"}
 }
 
 }
 
 
-/* =========================
-   2. 题库配置（可无限添加）
-========================= */
+/* ============================
+星座元素
+============================ */
 
-const QUESTIONS = [
+const zodiacElement={
+aries:"fire",
+taurus:"earth",
+gemini:"air",
+cancer:"water",
+leo:"fire",
+virgo:"earth",
+libra:"air",
+scorpio:"water",
+sagittarius:"fire",
+capricorn:"earth",
+aquarius:"air",
+pisces:"water"
+}
 
+
+/* ============================
+五行相生
+============================ */
+
+const elementGenerate={
+wood:"fire",
+fire:"earth",
+earth:"metal",
+metal:"water",
+water:"wood"
+}
+
+
+/* ============================
+八字旺属性
+============================ */
+
+const baziMap={
+"甲木":["庚金","癸水"],
+"乙木":["癸水","丙火","甲木"],
+"丙火":["甲木","壬水"],
+"丁火":["乙木","甲木"],
+"戊土":["丙火","甲木"],
+"己土":["丙火","癸水"],
+"庚金":["丁火"],
+"辛金":["壬水","己土"],
+"壬水":["庚金","戊土"],
+"癸水":["辛金","丙火"]
+}
+
+
+/* ============================
+MBTI兼容（简化版）
+============================ */
+
+const mbtiMatch={
+INFP:["ENFJ","INFJ"],
+INTJ:["ENFP","ENTP"],
+ISFP:["ESFJ","ENFJ"],
+INFJ:["ENFP","ENTP"]
+}
+
+
+/* ============================
+问答
+============================ */
+
+const QUESTIONS=[
 {
-question:"如果有一天可以见到偶像，你最想？",
+question:"朋友眼中的你？",
 options:[
-{text:"一起逛街",type:"Jennie"},
-{text:"一起跳舞",type:"Lisa"},
-{text:"一起聊天",type:"Jisoo"},
-{text:"一起听音乐",type:"Rose"}
+{text:"气场强",value:"cool"},
+{text:"快乐社牛",value:"fun"},
+{text:"温柔细腻",value:"soft"},
+{text:"成熟稳定",value:"calm"}
 ]
 },
-
 {
-question:"朋友眼中的你更像？",
+question:"最喜欢的生活方式？",
 options:[
-{text:"气场强",type:"Jennie"},
-{text:"搞笑担当",type:"Lisa"},
-{text:"温柔治愈",type:"Rose"},
-{text:"可靠成熟",type:"Jisoo"}
-]
-},
-
-{
-question:"你更喜欢哪种生活？",
-options:[
-{text:"精致都市",type:"Jennie"},
-{text:"自由冒险",type:"Lisa"},
-{text:"安静浪漫",type:"Rose"},
-{text:"稳定幸福",type:"Jisoo"}
+{text:"时尚都市",value:"cool"},
+{text:"派对舞蹈",value:"fun"},
+{text:"音乐艺术",value:"soft"},
+{text:"旅行自然",value:"calm"}
 ]
 }
-
 ]
 
 
-/* =========================
-   3. 逻辑引擎
-========================= */
+/* ============================
+用户数据
+============================ */
 
-let index = 0
-let score = {}
+let user={}
+let personality={}
+let index=0
 
-Object.keys(RESULTS).forEach(k=>score[k]=0)
 
-const startScreen = document.getElementById("startScreen")
-const quizScreen = document.getElementById("quizScreen")
-const resultScreen = document.getElementById("resultScreen")
+const profileScreen=document.getElementById("profileScreen")
+const quizScreen=document.getElementById("quizScreen")
+const resultScreen=document.getElementById("resultScreen")
 
-const questionBox = document.getElementById("questionBox")
-const optionsBox = document.getElementById("optionsBox")
-const progressBar = document.getElementById("progressBar")
+const questionBox=document.getElementById("questionBox")
+const optionsBox=document.getElementById("optionsBox")
+const progressBar=document.getElementById("progressBar")
+
 
 function startQuiz(){
 
-startScreen.classList.add("hidden")
+user.zodiac=document.getElementById("zodiac").value
+user.mbti=document.getElementById("mbti").value.toUpperCase()
+user.blood=document.getElementById("blood").value
+user.bazi=document.getElementById("bazi").value
+
+profileScreen.classList.add("hidden")
 quizScreen.classList.remove("hidden")
 
-shuffleQuestions()
 renderQuestion()
-
-}
-
-
-/* 随机打乱题目 */
-function shuffleQuestions(){
-
-for(let i = QUESTIONS.length -1; i>0;i--){
-
-const j = Math.floor(Math.random()*(i+1))
-
-;[QUESTIONS[i],QUESTIONS[j]]=[QUESTIONS[j],QUESTIONS[i]]
-
-}
 
 }
 
 
 function renderQuestion(){
 
-const q = QUESTIONS[index]
+const q=QUESTIONS[index]
 
-progressBar.style.width = ((index)/QUESTIONS.length*100)+"%"
+progressBar.style.width=(index/QUESTIONS.length*100)+"%"
 
-questionBox.innerHTML = `<div class="question">${q.question}</div>`
-
+questionBox.innerHTML=`<div class="question">${q.question}</div>`
 optionsBox.innerHTML=""
 
 q.options.forEach(opt=>{
 
-const btn = document.createElement("button")
+const btn=document.createElement("button")
 btn.className="option"
-btn.innerText = opt.text
+btn.innerText=opt.text
 
 btn.onclick=()=>{
 
-score[opt.type]++
+if(!personality[opt.value]) personality[opt.value]=0
+personality[opt.value]++
+
 index++
 
-if(index < QUESTIONS.length){
+if(index<QUESTIONS.length){
 renderQuestion()
 }else{
-showResult()
+calculate()
 }
 
 }
@@ -291,50 +305,113 @@ optionsBox.appendChild(btn)
 }
 
 
-function showResult(){
+/* ============================
+匹配算法
+============================ */
+
+function calculate(){
 
 quizScreen.classList.add("hidden")
 resultScreen.classList.remove("hidden")
 
-let max=0
-let winner=null
+let ranking=[]
 
-for(const k in score){
-if(score[k]>max){
-max=score[k]
-winner=k
-}
+for(const name in IDOLS){
+
+const idol=IDOLS[name]
+let score=0
+
+// 星座元素匹配
+
+const userElement=zodiacElement[user.zodiac]
+
+if(idol.traits.element===userElement) score+=3
+
+// 五行相生
+
+if(elementGenerate[userElement]===idol.traits.element) score+=2
+
+// MBTI
+
+if(idol.traits.mbti===user.mbti) score+=4
+
+if(mbtiMatch[user.mbti] && mbtiMatch[user.mbti].includes(idol.traits.mbti)) score+=2
+
+// 血型
+
+if(idol.traits.blood===user.blood) score+=2
+
+
+// 八字旺属性
+
+const fav=baziMap[user.bazi]||[]
+
+fav.forEach(v=>{
+
+if(v.includes("火") && idol.traits.element==="fire") score+=3
+if(v.includes("水") && idol.traits.element==="water") score+=3
+if(v.includes("木") && idol.traits.element==="air") score+=3
+if(v.includes("金") && idol.traits.element==="metal") score+=3
+if(v.includes("土") && idol.traits.element==="earth") score+=3
+
+})
+
+
+// 性格
+
+if(personality[idol.traits.energy]) score+=personality[idol.traits.energy]*2
+
+
+ranking.push({name,score})
+
 }
 
-const r = RESULTS[winner]
+ranking.sort((a,b)=>b.score-a.score)
+
+
+const maxScore=ranking[0].score
+
+
+let rankHTML=""
+
+ranking.forEach((r,i)=>{
+
+const percent=Math.round(r.score/maxScore*100)
+
+rankHTML+=`<div class='rank-item'>${i+1}. ${r.name} <span class='percent'>${percent}%</span></div>`
+
+})
+
+
+const best=ranking[0]
+
 
 resultScreen.innerHTML=`
-<h2>✨ 测试结果 ✨</h2>
-<div class="result-name">${r.name}</div>
-<img src="${r.img}">
-<p class="result-desc">${r.desc}</p>
+<h2>✨ 你的本命偶像 ✨</h2>
+<h1>${best.name}</h1>
+<img src="${IDOLS[best.name].img}">
+
+<div class="rank">
+<h3>匹配度排行榜</h3>
+${rankHTML}
+</div>
 
 <div class="actions">
-<button onclick="restart()">重新测试</button>
-<button class="secondary" onclick="shareResult('${r.name}')">分享结果</button>
+<button onclick="location.reload()">重新测试</button>
+<button class="secondary" onclick="share('${best.name}')">分享结果</button>
 </div>
 `
 
 }
 
 
-function restart(){
-location.reload()
-}
+function share(name){
 
-
-function shareResult(name){
-
-const text = `我测出来最旺我的KPOP明星是 ${name}！快来测测你的追星体质！`
+const text=`我测出来最匹配的KPOP偶像是 ${name}！快来算算你的本命idol！`
 
 navigator.clipboard.writeText(text)
 
-alert("结果文案已复制，可以去小红书/微博分享啦！")
+alert("分享文案已复制，可以发小红书/微博")
 
 }
 
