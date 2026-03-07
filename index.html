@@ -328,19 +328,49 @@ function calculate() {
     rankHTML += `<div class='rank-item'>${i + 1}. ${r.name} <span class='percent'>契合度 ${percent}%</span></div>`;
   });
 
-  const best = ranking[0];
-  resultScreen.innerHTML = `
+  /* ============================
+   结果渲染 (防崩溃增强版)
+   ============================ */
+const best = ranking[0];
+
+// 1. 获取偶像数据 (增加容错)
+const idolData = IDOLS[best.name];
+
+// 2. 调试：按下 F12 在控制台看这里输出什么
+console.log("当前匹配到的名字:", best.name);
+console.log("找到的数据内容:", idolData);
+
+// 3. 确定图片路径 (如果找不到数据，给一个占位图)
+let imgSrc = "";
+if (idolData && idolData.img) {
+    imgSrc = idolData.img;
+} else {
+    // 自动补全路径逻辑：如果库里漏了，尝试根据名字猜路径
+    // 把名字转小写，去掉括号，合成路径
+    let shortName = best.name.split(' ')[0].toLowerCase();
+    imgSrc = `images/${shortName}.jpg`;
+}
+
+resultScreen.innerHTML = `
     <h2>✨ 你的本命偶像 ✨</h2>
     <h1 style="font-size:32px">${best.name}</h1>
-    <img src="${IDOLS[best.name].img}" style="width:250px; border-radius:20px; box-shadow:0 10px 20px rgba(0,0,0,0.2)">
-    <div class="rank"><h3>匹配度排行榜</h3>${rankHTML}</div>
+    
+    <img src="${imgSrc}" 
+         style="width:250px; border-radius:20px; box-shadow:0 10px 20px rgba(0,0,0,0.2)" 
+         onerror="this.onerror=null; this.src='https://via.placeholder.com/250x250?text=Image+Error+Check+Naming';">
+    
+    <div class="rank">
+        <h3>匹配度排行榜</h3>
+        ${rankHTML}
+    </div>
+    
     <div class="actions">
       <button onclick="location.reload()">重新测试</button>
       <button class="secondary" onclick="share('${best.name}')">分享结果</button>
     </div>
-  `;
+`;
 }
-
+  
 function share(name) {
   const text = `我测出来最匹配的KPOP偶像是 ${name}！快来算算你的本命idol！`;
   navigator.clipboard.writeText(text);
