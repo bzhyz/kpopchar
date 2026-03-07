@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KPOP追星体质测试</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
+.app{
+width:100%;
+max-width:720px;
+background:white;
+border-radius:20px;
+padding:40px 30px;
+box-shadow:0 20px 60px rgba(0,0,0,0.15);
+text-align:center;
+}
+
+h1{margin-top:0;font-size:32px}
+
+.subtitle{
+color:#666;
+margin-bottom:30px;
+}
+
+button{
+border:none;
+border-radius:12px;
+padding:14px 18px;
+font-size:16px;
+cursor:pointer;
+}
+
+.start-btn{
+background:black;
+color:white;
+font-size:18px;
+padding:16px 26px;
+}
+
+.option{
+width:100%;
+margin:10px 0;
+background:#f3f3f3;
+text-align:left;
+font-size:16px;
+}
+
+.option:hover{
+background:#e8e8e8;
+}
+
+.progress{
+height:8px;
+background:#eee;
+border-radius:20px;
+margin-bottom:25px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:100%;
+background:black;
+width:0%;
+transition:0.3s;
+}
+
+.question{
+font-size:22px;
+margin-bottom:20px;
+}
+
+.result img{
+width:200px;
+border-radius:16px;
+margin-top:15px;
+}
+
+.result-name{
+font-size:34px;
+margin:10px 0;
+}
+
+.result-desc{
+color:#555;
+line-height:1.6;
+}
+
+.actions{
+margin-top:25px;
+}
+
+.secondary{
+background:#eee;
+margin-left:10px;
+}
+
+.hidden{display:none}
+
+.footer{
+margin-top:25px;
+font-size:12px;
+color:#888
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div id="startScreen">
+<h1>🔮 KPOP追星体质测试</h1>
+<p class="subtitle">测测你追哪个KPOP明星最旺你</p>
+<button class="start-btn" onclick="startQuiz()">开始测试</button>
+<div class="footer">仅供娱乐 · 可以自定义题库</div>
+</div>
+
+<div id="quizScreen" class="hidden">
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+<div id="questionBox"></div>
+<div id="optionsBox"></div>
+</div>
+
+<div id="resultScreen" class="hidden result"></div>
+
+</div>
+
+<script>
+
+/* =========================
+   1. 结果配置（添加明星）
+========================= */
+
+const RESULTS = {
+
+"Jennie":{
+name:"Jennie",
+img:"images/jennie.jpg",
+desc:"你属于气场型追星体质。追Jennie的人往往自带事业运和高级感。"
+},
+
+"Lisa":{
+name:"Lisa",
+img:"images/lisa.jpg",
+desc:"你是快乐型追星体质。追Lisa的人往往生活充满活力和好运。"
+},
+
+"Jisoo":{
+name:"Jisoo",
+img:"images/jisoo.jpg",
+desc:"你属于稳定型追星体质。追Jisoo的人通常生活顺利、人缘很好。"
+},
+
+"Rose":{
+name:"Rose",
+img:"images/rose.jpg",
+desc:"你是浪漫型追星体质。追Rosé的人容易拥有灵感和爱情运。"
+}
+
+}
+
+
+/* =========================
+   2. 题库配置（可无限添加）
+========================= */
+
+const QUESTIONS = [
+
+{
+question:"如果有一天可以见到偶像，你最想？",
+options:[
+{text:"一起逛街",type:"Jennie"},
+{text:"一起跳舞",type:"Lisa"},
+{text:"一起聊天",type:"Jisoo"},
+{text:"一起听音乐",type:"Rose"}
+]
+},
+
+{
+question:"朋友眼中的你更像？",
+options:[
+{text:"气场强",type:"Jennie"},
+{text:"搞笑担当",type:"Lisa"},
+{text:"温柔治愈",type:"Rose"},
+{text:"可靠成熟",type:"Jisoo"}
+]
+},
+
+{
+question:"你更喜欢哪种生活？",
+options:[
+{text:"精致都市",type:"Jennie"},
+{text:"自由冒险",type:"Lisa"},
+{text:"安静浪漫",type:"Rose"},
+{text:"稳定幸福",type:"Jisoo"}
+]
+}
+
+]
+
+
+/* =========================
+   3. 逻辑引擎
+========================= */
+
+let index = 0
+let score = {}
+
+Object.keys(RESULTS).forEach(k=>score[k]=0)
+
+const startScreen = document.getElementById("startScreen")
+const quizScreen = document.getElementById("quizScreen")
+const resultScreen = document.getElementById("resultScreen")
+
+const questionBox = document.getElementById("questionBox")
+const optionsBox = document.getElementById("optionsBox")
+const progressBar = document.getElementById("progressBar")
+
+function startQuiz(){
+
+startScreen.classList.add("hidden")
+quizScreen.classList.remove("hidden")
+
+shuffleQuestions()
+renderQuestion()
+
+}
+
+
+/* 随机打乱题目 */
+function shuffleQuestions(){
+
+for(let i = QUESTIONS.length -1; i>0;i--){
+
+const j = Math.floor(Math.random()*(i+1))
+
+;[QUESTIONS[i],QUESTIONS[j]]=[QUESTIONS[j],QUESTIONS[i]]
+
+}
+
+}
+
+
+function renderQuestion(){
+
+const q = QUESTIONS[index]
+
+progressBar.style.width = ((index)/QUESTIONS.length*100)+"%"
+
+questionBox.innerHTML = `<div class="question">${q.question}</div>`
+
+optionsBox.innerHTML=""
+
+q.options.forEach(opt=>{
+
+const btn = document.createElement("button")
+btn.className="option"
+btn.innerText = opt.text
+
+btn.onclick=()=>{
+
+score[opt.type]++
+index++
+
+if(index < QUESTIONS.length){
+renderQuestion()
+}else{
+showResult()
+}
+
+}
+
+optionsBox.appendChild(btn)
+
+})
+
+}
+
+
+function showResult(){
+
+quizScreen.classList.add("hidden")
+resultScreen.classList.remove("hidden")
+
+let max=0
+let winner=null
+
+for(const k in score){
+if(score[k]>max){
+max=score[k]
+winner=k
+}
+}
+
+const r = RESULTS[winner]
+
+resultScreen.innerHTML=`
+<h2>✨ 测试结果 ✨</h2>
+<div class="result-name">${r.name}</div>
+<img src="${r.img}">
+<p class="result-desc">${r.desc}</p>
+
+<div class="actions">
+<button onclick="restart()">重新测试</button>
+<button class="secondary" onclick="shareResult('${r.name}')">分享结果</button>
+</div>
+`
+
+}
+
+
+function restart(){
+location.reload()
+}
+
+
+function shareResult(name){
+
+const text = `我测出来最旺我的KPOP明星是 ${name}！快来测测你的追星体质！`
+
+navigator.clipboard.writeText(text)
+
+alert("结果文案已复制，可以去小红书/微博分享啦！")
+
+}
+
+</script>
+
+</body>
+</html>
