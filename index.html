@@ -201,9 +201,24 @@ const IDOLS = {
     img: "images/ten.jpg", 
     traits: { zodiac: "pisces", mbti: "INFJ", blood: "A", element: "water", energy: "cool", dayMaster: "辛金" }
   }
-};
-  
-const zodiacElement = {
+},
+  // --- BTS ---
+  "RM (BTS)": { img: "images/rm.jpg", traits: { zodiac: "virgo", mbti: "ENFP", blood: "A", element: "earth", energy: "calm", dayMaster: "己土" }},
+  "Jin (BTS)": { img: "images/jin.jpg", traits: { zodiac: "sagittarius", mbti: "INTP", blood: "O", element: "fire", energy: "fun", dayMaster: "壬水" }},
+  "SUGA (BTS)": { img: "images/suga.jpg", traits: { zodiac: "pisces", mbti: "INTP", blood: "O", element: "water", energy: "cool", dayMaster: "丁火" }},
+  "j-hope (BTS)": { img: "images/jhope.jpg", traits: { zodiac: "aquarius", mbti: "ESFJ", blood: "A", element: "air", energy: "fun", dayMaster: "癸水" }},
+  "Jimin (BTS)": { img: "images/jimin.jpg", traits: { zodiac: "libra", mbti: "ENFJ", blood: "A", element: "air", energy: "soft", dayMaster: "乙木" }},
+  "V (BTS)": { img: "images/v.jpg", traits: { zodiac: "capricorn", mbti: "ENFP", blood: "AB", element: "earth", energy: "cool", dayMaster: "癸水" }},
+  "Jungkook (BTS)": { img: "images/jungkook.jpg", traits: { zodiac: "virgo", mbti: "INTP", blood: "A", element: "earth", energy: "cool", dayMaster: "甲木" }},
+
+  // --- CORTIS (BigHit 2025 Debut) ---
+  "Martin (CORTIS)": { img: "images/martin.jpg", traits: { zodiac: "pisces", mbti: "ENTP", blood: "O", element: "water", energy: "soft", dayMaster: "丁火" }},
+  "James (CORTIS)": { img: "images/james.jpg", traits: { zodiac: "libra", mbti: "INTP", blood: "A", element: "air", energy: "cool", dayMaster: "己土" }},
+  "Juhoon (CORTIS)": { img: "images/juhoon.jpg", traits: { zodiac: "capricorn", mbti: "ISFP", blood: "O", element: "earth", energy: "calm", dayMaster: "庚金" }},
+  "Seonghyeon (CORTIS)": { img: "images/seonghyeon.jpg", traits: { zodiac: "capricorn", mbti: "INTP", blood: "A", element: "earth", energy: "soft", dayMaster: "丙火" }},
+  "Keonho (CORTIS)": { img: "images/keonho.jpg", traits: { zodiac: "aquarius", mbti: "INTP", blood: "O", element: "air", energy: "fun", dayMaster: "戊土" }};
+
+  const zodiacElement = {
   aries: "fire", taurus: "earth", gemini: "air", cancer: "water",
   leo: "fire", virgo: "earth", libra: "air", scorpio: "water",
   sagittarius: "fire", capricorn: "earth", aquarius: "air", pisces: "water"
@@ -336,77 +351,98 @@ function calculate() {
 
   for (const name in IDOLS) {
     const idol = IDOLS[name];
-    let score = 0;
+    let score = 0; // 满分设为 100 分
+
+    // 1. 八字日主匹配 (最高 25分)
+    // 修复：直接用用户的喜用神(fav) 去匹配偶像的真实日主(dayMaster)
     const fav = baziMap[user.bazi] || [];
-    fav.forEach(v => {
-      if (v.includes("火") && idol.traits.element === "fire") score += 15;
-      if (v.includes("水") && idol.traits.element === "water") score += 15;
-      if (v.includes("木") && idol.traits.element === "air") score += 15;
-      if (v.includes("金") && idol.traits.element === "metal") score += 15;
-      if (v.includes("土") && idol.traits.element === "earth") score += 15;
-    });
+    if (fav.includes(idol.traits.dayMaster)) {
+      score += 25; // 是用户的喜用神，天作之合
+    } else if (user.bazi === idol.traits.dayMaster) {
+      score += 10; // 日主相同，像照镜子一样有默契
+    }
 
-    if (mbtiMatch[user.mbti] && mbtiMatch[user.mbti].includes(idol.traits.mbti)) { score += 12; }
-    else if (idol.traits.mbti === user.mbti) { score += 8; }
+    // 2. MBTI 匹配 (最高 25分)
+    if (mbtiMatch[user.mbti] && mbtiMatch[user.mbti].includes(idol.traits.mbti)) { 
+      score += 25; // 官配 MBTI
+    } else if (idol.traits.mbti === user.mbti) { 
+      score += 15; // 相同 MBTI
+    }
 
-    if (zodiacMatch[user.zodiac] && zodiacMatch[user.zodiac].includes(idol.traits.zodiac)) { score += 8; }
-    if (idol.traits.element === zodiacElement[user.zodiac]) { score += 4; }
-    if (idol.traits.blood === user.blood) { score += 3; }
-    if (personality[idol.traits.energy]) { score += personality[idol.traits.energy] * 2; }
+    // 3. 星座匹配 (最高 15分)
+    if (zodiacMatch[user.zodiac] && zodiacMatch[user.zodiac].includes(idol.traits.zodiac)) { 
+      score += 15; 
+    } else if (idol.traits.element === zodiacElement[user.zodiac]) { 
+      score += 5; // 星象元素相同（风水火土）
+    }
 
-    ranking.push({ name, score });
+    // 4. 血型匹配 (最高 10分)
+    if (idol.traits.blood === user.blood) { 
+      score += 10; 
+    }
+
+    // 5. 性能量问答测试 (最高 25分)
+    // 4道题，如果偶像的 energy 恰好是你选择最多的，每命中一题给 6.25 分
+    if (personality[idol.traits.energy]) { 
+      score += personality[idol.traits.energy] * 6.25; 
+    }
+
+    ranking.push({ name, score, traits: idol.traits });
   }
 
+  // 按分数从高到低排序
   ranking.sort((a, b) => b.score - a.score);
-  let maxScore = ranking[0].score || 1;
+  
   let rankHTML = "";
   ranking.slice(0, 5).forEach((r, i) => {
-    let percent = Math.min(Math.round((r.score / maxScore) * 99), 99);
-    if(i === 0) percent = 99;
-    rankHTML += `<div class='rank-item'>${i + 1}. ${r.name} <span class='percent'>契合度 ${percent}%</span></div>`;
+    // 将 0-100 的绝对分数，映射到 45%-99% 的区间，避免出现超低分让用户感到扫兴
+    let displayPercent = Math.floor(45 + (r.score / 100) * 54); 
+    // 防止超出 99%
+    displayPercent = Math.min(displayPercent, 99); 
+    
+    // 给第一名加个小皇冠特效
+    let crown = i === 0 ? "👑 " : "";
+    rankHTML += `<div class='rank-item'>${crown}${i + 1}. ${r.name} <span class='percent'>契合度 ${displayPercent}%</span></div>`;
   });
 
   /* ============================
-   结果渲染 (防崩溃增强版)
+   结果渲染
    ============================ */
-const best = ranking[0];
+  const best = ranking[0];
+  const idolData = IDOLS[best.name];
 
-// 1. 获取偶像数据 (增加容错)
-const idolData = IDOLS[best.name];
+  let imgSrc = "";
+  if (idolData && idolData.img) {
+      imgSrc = idolData.img;
+  } else {
+      let shortName = best.name.split(' ')[0].toLowerCase();
+      imgSrc = `images/${shortName}.jpg`;
+  }
 
-// 2. 调试：按下 F12 在控制台看这里输出什么
-console.log("当前匹配到的名字:", best.name);
-console.log("找到的数据内容:", idolData);
+  resultScreen.innerHTML = `
+      <h2>✨ 你的本命偶像 ✨</h2>
+      <h1 style="font-size:32px">${best.name}</h1>
+      
+      <img src="${imgSrc}" 
+           style="width:250px; border-radius:20px; box-shadow:0 10px 20px rgba(0,0,0,0.2)" 
+           onerror="this.onerror=null; this.src='https://via.placeholder.com/250x250?text=Image+Missing';">
+      
+      <div style="margin-top: 15px;">
+        <span class="badge">MBTI: ${best.traits.mbti}</span>
+        <span class="badge">八字: ${best.traits.dayMaster}</span>
+        <span class="badge">能量: ${best.traits.energy.toUpperCase()}</span>
+      </div>
 
-// 3. 确定图片路径 (如果找不到数据，给一个占位图)
-let imgSrc = "";
-if (idolData && idolData.img) {
-    imgSrc = idolData.img;
-} else {
-    // 自动补全路径逻辑：如果库里漏了，尝试根据名字猜路径
-    // 把名字转小写，去掉括号，合成路径
-    let shortName = best.name.split(' ')[0].toLowerCase();
-    imgSrc = `images/${shortName}.jpg`;
-}
-
-resultScreen.innerHTML = `
-    <h2>✨ 你的本命偶像 ✨</h2>
-    <h1 style="font-size:32px">${best.name}</h1>
-    
-    <img src="${imgSrc}" 
-         style="width:250px; border-radius:20px; box-shadow:0 10px 20px rgba(0,0,0,0.2)" 
-         onerror="this.onerror=null; this.src='https://via.placeholder.com/250x250?text=Image+Error+Check+Naming';">
-    
-    <div class="rank">
-        <h3>匹配度排行榜</h3>
-        ${rankHTML}
-    </div>
-    
-    <div class="actions">
-      <button onclick="location.reload()">重新测试</button>
-      <button class="secondary" onclick="share('${best.name}')">分享结果</button>
-    </div>
-`;
+      <div class="rank">
+          <h3>匹配度排行榜</h3>
+          ${rankHTML}
+      </div>
+      
+      <div class="actions">
+        <button onclick="location.reload()">重新测试</button>
+        <button class="secondary" onclick="share('${best.name}')">分享结果</button>
+      </div>
+  `;
 }
   
 function share(name) {
