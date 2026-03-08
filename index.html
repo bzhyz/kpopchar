@@ -423,12 +423,40 @@ resultScreen.innerHTML = `
     </div>
 `;}
   
+/* ============================
+升级版分享功能
+============================ */
 function share(name) {
-  const text = `我测出来最匹配的KPOP偶像是 ${name}！快来算算你的本命idol！`;
-  navigator.clipboard.writeText(text);
-  alert("分享文案已复制，可以发小红书/微博");
+  // 你的作品网址
+  const myUrl = "https://bzhyz.github.io/kpopchar/";
+  
+  // 获取当前匹配偶像的图片路径 (或者是偶像的名字，方便用户配图)
+  const text = `🔮 我在【KPOP偶像命理匹配】中测出来，我的本命偶像竟然是 ${name}！✨\n\n契合度爆表，不愧是我的命中注定！你也快来测测看你的本命idol是谁吧：\n👉 ${myUrl}`;
+
+  // 1. 优先尝试系统原生分享 (手机端效果最好)
+  if (navigator.share) {
+    navigator.share({
+      title: 'KPOP 偶像命理匹配',
+      text: text,
+      url: myUrl,
+    }).catch(() => {
+      // 如果原生分享取消，则退回到剪贴板
+      copyToClipboard(text);
+    });
+  } else {
+    // 2. 电脑端或不支持原生分享的浏览器，直接复制文案
+    copyToClipboard(text);
+  }
 }
 
+// 辅助函数：执行复制动作
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert("✨ 分享文案和网址已复制！\n\n快去发小红书/微博安利你的本命吧~");
+  }).catch(err => {
+    console.error('复制失败', err);
+  });
+}
 
 
 
