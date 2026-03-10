@@ -443,6 +443,13 @@ const baziMap = {
   "庚金": ["丁火"], "辛金": ["壬水", "己土"], "壬水": ["庚金", "戊土"], "癸水": ["辛金", "丙火"]
 };
 
+const bloodMatchScore = {
+  "A":  { "A": 10, "B": 5,  "O": 8,  "AB": 7 },
+  "B":  { "A": 5,  "B": 10, "O": 8,  "AB": 7 },
+  "O":  { "A": 8,  "B": 8,  "O": 10, "AB": 5 },
+  "AB": { "A": 7,  "B": 7,  "O": 5,  "AB": 10 }
+};
+
 const mbtiMatch = {
   "INFP": ["ENFJ", "ENTJ"], "ENFP": ["INFJ", "INTJ"], "INFJ": ["ENFP", "ENTP"],
   "ENFJ": ["INFP", "ISFP"], "INTJ": ["ENFP", "ENTP"], "ENTJ": ["INFP", "INTP"],
@@ -594,12 +601,16 @@ function calculate() {
     if (zodiacMatch[user.zodiac] && zodiacMatch[user.zodiac].includes(idol.traits.zodiac)) { score += 15; } 
     else if (idol.traits.element === zodiacElement[user.zodiac]) { score += 5; }
 
-  // 4. 血型匹配 (简化版)
-if (user.blood === idol.traits.blood) { 
-    score += 10; 
-} else {
-    score += 5; 
-}
+  // 4. 血型匹配
+    // 优先从矩阵中找得分，如果找不到（比如爱豆血型是 unsigned），则给个基础分 5 分
+    const userBlood = user.blood;
+    const idolBlood = idol.traits.blood;
+
+    if (bloodMatchScore[userBlood] && bloodMatchScore[userBlood][idolBlood]) {
+      score += bloodMatchScore[userBlood][idolBlood];
+    } else {
+      score += 5; // 兜底分数：当数据缺失或不匹配时
+    }
 
     // 5. 性能量问答测试
     if (personality[idol.traits.energy]) { score += personality[idol.traits.energy] * 5.25; }
