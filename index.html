@@ -590,9 +590,9 @@ function calculate() {
     }
 
     // 5. 性能量问答测试 (最高 25分)
-    // 4道题，如果偶像的 energy 恰好是你选择最多的，每命中一题给 6.25 分
+    // 4道题，如果偶像的 energy 恰好是你选择最多的，每命中一题给 4.25 分
     if (personality[idol.traits.energy]) { 
-      score += personality[idol.traits.energy] * 6.25; 
+      score += personality[idol.traits.energy] * 4.25; 
     }
 
     ranking.push({ name, score, traits: idol.traits });
