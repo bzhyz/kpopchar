@@ -602,10 +602,12 @@ function calculate() {
     if (zodiacMatch[user.zodiac] && zodiacMatch[user.zodiac].includes(idol.traits.zodiac)) { score += 15; } 
     else if (idol.traits.element === zodiacElement[user.zodiac]) { score += 5; }
 
-    // 4. 血型匹配
-    if (user.blood === "N/A" || idol.traits.blood === "N/A") { score += 5; } 
-    else if (bloodMatchScore[user.blood] && bloodMatchScore[user.blood][idol.traits.blood]) { score += bloodMatchScore[user.blood][idol.traits.blood]; } 
-    else if (idol.traits.blood === user.blood) { score += 10; }
+  // 4. 血型匹配 (简化版)
+if (user.blood === idol.traits.blood) { 
+    score += 10; 
+} else {
+    score += 5; 
+}
 
     // 5. 性能量问答测试
     if (personality[idol.traits.energy]) { score += personality[idol.traits.energy] * 5.25; }
